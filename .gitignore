@@ -25,7 +25,6 @@ Thumbs.db
 
 # 🔹 Logs
 logs/
-*.log
 
 # 🔹 Cache & Temp files
 *.tmp
@@ -41,3 +40,4 @@ docs/swagger.yaml
 docker-compose.override.yml
 node_modules/
 coverage/
+pmqc-api.iml

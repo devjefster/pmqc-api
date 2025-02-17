@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-
-	"pmqc-api/config"
-	"pmqc-api/models"
+	"pmqc-api/internal/config"
+	"pmqc-api/internal/models"
 )
 
 type FetchResult struct {

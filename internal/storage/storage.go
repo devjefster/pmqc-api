@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	config2 "pmqc-api/internal/config"
+	"pmqc-api/internal/models"
 
 	"github.com/jackc/pgx/v5"
-	"pmqc-api/config"
-	"pmqc-api/models"
 )
 
 func StorePMQCData(c *gin.Context) {
@@ -25,9 +25,9 @@ func StorePMQCData(c *gin.Context) {
 	}
 
 	ctx := context.Background()
-	tx, err := config.DB.Begin(ctx)
+	tx, err := config2.DB.Begin(ctx)
 	if err != nil {
-		config.Logger.Errorf("❌ Transaction start failed: %v", err)
+		config2.Logger.Errorf("❌ Transaction start failed: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
 		return
 	}
@@ -48,7 +48,7 @@ func StorePMQCData(c *gin.Context) {
 		query := "INSERT INTO postos (razao_social, cnpj, distribuidora, endereco, complemento, bairro, latitude, longitude) VALUES " + postosBuffer.String()[:postosBuffer.Len()-1] + " ON CONFLICT (cnpj) DO NOTHING"
 		_, err := tx.Exec(ctx, query)
 		if err != nil {
-			config.Logger.Errorf("❌ Failed to batch insert postos: %v", err)
+			config2.Logger.Errorf("❌ Failed to batch insert postos: %v", err)
 			tx.Rollback(ctx)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
 			return
@@ -68,18 +68,18 @@ func StorePMQCData(c *gin.Context) {
 
 	_, err = tx.CopyFrom(ctx, pgx.Identifier{"amostras"}, []string{"id_numeric", "data_coleta", "grupo_produto", "produto"}, pgx.CopyFromRows(copyData))
 	if err != nil {
-		config.Logger.Errorf("❌ Failed to batch insert amostras: %v", err)
+		config2.Logger.Errorf("❌ Failed to batch insert amostras: %v", err)
 		tx.Rollback(ctx)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
 		return
 	}
 
 	if err = tx.Commit(ctx); err != nil {
-		config.Logger.Errorf("❌ Transaction commit failed: %v", err)
+		config2.Logger.Errorf("❌ Transaction commit failed: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
 		return
 	}
 
-	config.Logger.Infof("✅ Data for %d-%02d stored successfully!", request.Year, request.Month)
+	config2.Logger.Infof("✅ Data for %d-%02d stored successfully!", request.Year, request.Month)
 	c.JSON(http.StatusOK, gin.H{"message": "Data stored successfully"})
 }

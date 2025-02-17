@@ -2,10 +2,10 @@ package fetcher
 
 import (
 	"net/http"
+	"pmqc-api/internal/config"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"pmqc-api/config"
 )
 
 // FetchDataHandler handles API requests to fetch PMQC data
