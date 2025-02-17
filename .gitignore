@@ -1,0 +1,43 @@
+# 🔹 Go-specific ignores
+/bin/
+/tmp/
+/out/
+/vendor/
+/*.exe
+*.log
+*.test
+*.prof
+
+# 🔹 Dependency files (go mod downloads)
+go.sum
+go.work
+go.work.sum
+
+# 🔹 IDE & Editor Files
+.idea/
+.vscode/
+*.iml
+
+# 🔹 OS-specific files
+.DS_Store
+Thumbs.db
+*.swp
+
+# 🔹 Logs
+logs/
+*.log
+
+# 🔹 Cache & Temp files
+*.tmp
+*.cache
+*.bak
+*.old
+
+# 🔹 Swagger Documentation (generated)
+docs/swagger.json
+docs/swagger.yaml
+
+# 🔹 Docker Artifacts
+docker-compose.override.yml
+node_modules/
+coverage/

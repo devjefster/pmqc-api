@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: pmqc-db
+    restart: always
+    environment:
+      POSTGRES_USER: pmqc_user
+      POSTGRES_PASSWORD: pmqc_password
+      POSTGRES_DB: pmqc_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  pmqc-api:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgres://pmqc_user:pmqc_password@postgres:5432/pmqc_db?sslmode=disable
+    volumes:
+      - ./logs:/app/logs
+
+volumes:
+  pgdata:
